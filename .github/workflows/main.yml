@@ -56,5 +56,5 @@ jobs:
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           
           # Używamy docker-compose (z myślnikiem), aby uniknąć błędu "unknown command"
-          docker-compose pull
-          docker-compose up -d --force-recreate
+          docker compose pull
+          docker compose up -d --force-recreate
