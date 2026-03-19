@@ -5,12 +5,11 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  # ETAP 1: Budowanie i wysyłka obrazu (robi to GitHub w chmurze)
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -23,37 +22,41 @@ jobs:
         with:
           context: ./app
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-app:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-app:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-app:${{ github.sha }}
 
-  # ETAP 2: Wdrożenie (wykonuje Twój serwer Ubuntu przez Runnera)
   deploy:
     needs: build-and-push
     if: github.ref == 'refs/heads/main'
     runs-on: [self-hosted, ubuntu]
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub (deploy)
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Deploy with Docker Compose
         run: |
-          # 1. Przygotowanie katalogu roboczego
+          set -e
+
           mkdir -p ~/app
-          
-          # 2. Skopiowanie plików (z repozytorium do folderu aplikacji)
+          rm -rf ~/app/*
+
           cp docker-compose.yml ~/app/
-          # Kopiujemy monitoring tylko jeśli folder istnieje
           [ -d "monitoring" ] && cp -r monitoring/ ~/app/ || echo "No monitoring folder found"
-          
-          # 3. Uruchomienie aplikacji
+
           cd ~/app
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          
+
           docker compose pull
-          docker compose up -d
+          docker compose up -d --force-recreate
 
       - name: Send Discord Notification
         if: always()
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"🚀 Deployment status: ${{ job.status }} na serwerze Ubuntu!\"}" \
+          -d "{\"content\": \"🚀 Deployment status: ${{ job.status }}\"}" \
           "${{ secrets.DISCORD_WEBHOOK }}"
