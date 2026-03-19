@@ -15,6 +15,6 @@ public class DemoApplication {
 
     @GetMapping("/")
     public String home() {
-        return "Serwer Ubuntu + GitHub Actions działają poprawnie!";
+        return "Serwer Ubuntu + GitHub Actions działają poprawnie! ver. 1.0";
     }
 }
