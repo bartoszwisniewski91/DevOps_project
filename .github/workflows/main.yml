@@ -30,7 +30,6 @@ jobs:
     needs: build-and-push
     if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -41,22 +40,28 @@ jobs:
       - name: Deploy with Docker Compose
         run: |
           set -e
-
+          
+          # Tworzymy folder, jeśli nie istnieje
           mkdir -p ~/app
-          rm -rf ~/app/*
-
+          
+          # Kopiujemy pliki (nadpisując stare wersje)
           cp docker-compose.yml ~/app/
-          [ -d "monitoring" ] && cp -r monitoring/ ~/app/ || echo "No monitoring folder found"
-
+          if [ -d "monitoring" ]; then
+            cp -r monitoring/ ~/app/
+          else
+            echo "No monitoring folder found"
+          fi
+          
           cd ~/app
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-
-          docker compose pull
-          docker compose up -d --force-recreate
+          
+          # Używamy docker-compose (z myślnikiem), aby uniknąć błędu "unknown command"
+          docker-compose pull
+          docker-compose up -d --force-recreate
 
       - name: Send Discord Notification
         if: always()
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"🚀 Deployment status: ${{ job.status }}\"}" \
+          -d "{\"content\": \"🚀 Deployment status: ${{ job.status }} na Twoim Ubuntu!\"}" \
           "${{ secrets.DISCORD_WEBHOOK }}"
