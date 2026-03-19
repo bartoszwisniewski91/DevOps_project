@@ -58,10 +58,3 @@ jobs:
           # Używamy docker-compose (z myślnikiem), aby uniknąć błędu "unknown command"
           docker-compose pull
           docker-compose up -d --force-recreate
-
-      - name: Send Discord Notification
-        if: always()
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"🚀 Deployment status: ${{ job.status }} na Twoim Ubuntu!\"}" \
-          "${{ secrets.DISCORD_WEBHOOK }}"
