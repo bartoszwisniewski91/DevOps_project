@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @SpringBootApplication
-@RestController // Dodajemy to, aby klasa mogła obsługiwać zapytania HTTP
+@RestController
 public class DemoApplication {
 
     public static void main(String[] args) {
