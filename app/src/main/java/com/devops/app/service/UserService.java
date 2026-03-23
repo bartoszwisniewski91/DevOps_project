@@ -18,20 +18,18 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Rejestracja nowego użytkownika
     public void register(String username, String password) {
         User user = new User();
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password)); // Szyfrowanie!
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole("ROLE_USER");
         userRepository.save(user);
     }
 
-    // Logowanie (Spring Security używa tej metody)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika"));
+                .orElseThrow(() -> new UsernameNotFoundException("Uzytkownik nie istnieje"));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), Collections.emptyList());

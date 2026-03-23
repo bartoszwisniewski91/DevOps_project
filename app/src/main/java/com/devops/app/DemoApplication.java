@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Map;
+import java.util.HashMap;
 
 @SpringBootApplication
 @RestController
@@ -14,6 +15,7 @@ public class DemoApplication {
 
     private final UserService userService;
 
+    // Konstruktor do wstrzykiwania UserService
     public DemoApplication(UserService userService) {
         this.userService = userService;
     }
@@ -22,15 +24,17 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    // Endpoint do rejestracji (dostępny publicznie)
     @PostMapping("/public/register")
     public String register(@RequestParam String user, @RequestParam String pass) {
         userService.register(user, pass);
-        return "Konto założone dla: " + user + ". Możesz się teraz zalogować!";
+        return "Konto zalozone dla: " + user + ". Mozesz sie teraz zalogowac!";
     }
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserDetails user) {
-        return "Witaj " + user.getUsername() + "! Twoje konto jest aktywne i pobrane z bazy PostgreSQL.";
+    public Map<String, Object> home(@AuthenticationPrincipal UserDetails user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Witaj " + user.getUsername() + "!");
+        response.put("info", "Twoje konto zostalo pobrane z bazy PostgreSQL.");
+        return response;
     }
 }
