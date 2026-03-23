@@ -34,11 +34,14 @@ jobs:
 
       - name: Deploy with Docker Compose
         run: |
+          set -e
           mkdir -p ~/app
           cp docker-compose.yml ~/app/
           [ -d "monitoring" ] && cp -r monitoring/ ~/app/ || echo "No monitoring folder"
           
           cd ~/app
+          # KLUCZOWY MOMENT: Eksportujemy zmienną do środowiska systemowego
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+          
           docker compose pull
           docker compose up -d --force-recreate
