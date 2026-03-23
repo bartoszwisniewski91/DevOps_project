@@ -32,4 +32,4 @@ public class SecurityConfig {
         
         return http.build();
     }
-} // <--- Upewnij się, że ten nawias tu jest i nic nie ma pod nim!
+}
