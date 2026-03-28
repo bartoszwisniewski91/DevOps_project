@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "✅ Pipeline Sukces: ${{ github.repository }}"
-          to: twoj-mail@przyklad.pl
+          to: ${{ secrets.MAIL_USERNAME }}
           from: GitHub Actions
           body: |
             Wdrożenie zakończone sukcesem!
@@ -49,7 +49,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: "❌ Pipeline BŁĄD: ${{ github.repository }}"
-          to: twoj-mail@przyklad.pl
+          to: ${{ secrets.MAIL_USERNAME }}
           from: GitHub Actions
           body: |
             Coś poszło nie tak podczas wdrażania.
