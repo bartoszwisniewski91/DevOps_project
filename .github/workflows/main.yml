@@ -52,7 +52,7 @@ jobs:
           to: bartoszwisniewski91@gmail.com
           from: GitHub Actions
           body: |
-            Coś poszło nie tak podczas wdrażania.
+            Pojawił się błąd podczas wdrażania.
             Sprawdź logi tutaj: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
   deploy:
