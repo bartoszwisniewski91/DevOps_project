@@ -1,0 +1,35 @@
+# --- JAVA & MAVEN ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# --- IDE (IntelliJ, Eclipse, VS Code) ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+bin/
+out/
+
+# --- DOCKER & SYSTEM ---
+.DS_Store
+Thumbs.db
+*.log
+docker-data/
+grafana_data/
+prometheus_data/
+
+# --- SECURITY & SECRETS (KLUCZOWE!) ---
+.env
+*.pem
+*.key
+secrets.txt
+credentials.yml
+
+# --- TEMPORARY ---
+tmp/
+temp/
